@@ -45,22 +45,6 @@ public class ProjectileController : MonoBehaviour
 
     }
 
-    //public void ShootBullet(char inputChar)
-    //{
-    //    WordManager wordManager = FindObjectOfType<WordManager>();
-    //    if (wordManager == null) return;
-
-    //    // 最も近いターゲットを取得
-    //    GameObject targetWordObject = wordManager.GetClosestWord(inputChar.ToString());
-    //    if (targetWordObject == null) return;
-
-    //    WordController targetWord = targetWordObject.GetComponent<WordController>();
-    //    if (targetWord == null) return;
-
-    //    // ターゲットをセットして弾を発射
-    //    Initialize(targetWord);
-    //}
-
 
 
 

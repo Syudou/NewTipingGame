@@ -29,6 +29,8 @@ public class GameManagerTutorial : MonoBehaviour
     private bool pressedJ = false;
     private int score = 0;  // スコア
 
+    private bool isGameOver = false; // ゲームオーバー判定用のフラグ
+
     void Start()
     {
         TimeText.text="";
@@ -48,7 +50,7 @@ public class GameManagerTutorial : MonoBehaviour
         {
             CheckStartKeys();
         }
-        else
+        else if(!isGameOver) // ゲームオーバー時は入力を受け付けない
         {
             CheckTyping();
         }
@@ -130,6 +132,8 @@ public class GameManagerTutorial : MonoBehaviour
 
     public void GameOver()
     {
+        isGameOver = true; // ゲームオーバー状態にする
+
         keyboardPanel.SetActive(false); //  キーボードパネルを非表示
         fingerPanel.SetActive(false);   //  指のパネルを非表示
         targetLetterText.text = "";

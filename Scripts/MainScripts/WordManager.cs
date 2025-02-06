@@ -49,13 +49,31 @@ public class WordManager : MonoBehaviour
     {
         Camera cam = Camera.main;
 
-        // カメラ枠のすぐ外側に文字を生成
-        float x = Random.Range(-0.1f, 1.1f); // カメラ枠の外（左右）
-        float y = Random.Range(-0.1f, 1.1f); // カメラ枠の外（上下）
+        float x, y;
 
-        // 確実に枠外にするための調整
-        if (x > 0f && x < 1f) x = x > 0.5f ? 1.1f : -0.1f;
-        if (y > 0f && y < 1f) y = y > 0.5f ? 1.1f : -0.1f;
+        // どの辺からスポーンするかをランダムに決める（0=左, 1=右, 2=上, 3=下）
+        int edge = Random.Range(0, 4);
+
+        if (edge == 0) // 左（Xがマイナス側に外れる）
+        {
+            x = -0.1f;
+            y = Random.Range(-0.1f, 1.1f); // 上下のどこからでも出現
+        }
+        else if (edge == 1) // 右（Xがプラス側に外れる）
+        {
+            x = 1.1f;
+            y = Random.Range(-0.1f, 1.1f);
+        }
+        else if (edge == 2) // 上（Yがプラス側に外れる）
+        {
+            y = 1.1f;
+            x = Random.Range(-0.1f, 1.1f); // 左右のどこからでも出現
+        }
+        else // 下（Yがマイナス側に外れる）
+        {
+            y = -0.1f;
+            x = Random.Range(-0.1f, 1.1f);
+        }
 
         Vector3 spawnPosition = cam.ViewportToWorldPoint(new Vector3(x, y, cam.nearClipPlane));
         spawnPosition.z = 0; // Z位置を0に設定
@@ -70,6 +88,32 @@ public class WordManager : MonoBehaviour
         // プレイヤーに向かう動きを設定
         newWord.GetComponent<WordController>().SetTarget(Vector3.zero, wordSpeed);
     }
+
+    //void SpawnWord()
+    //{
+    //    Camera cam = Camera.main;
+
+    //    // カメラ枠のすぐ外側に文字を生成
+    //    float x = Random.Range(-0.1f, 1.1f); // カメラ枠の外（左右）
+    //    float y = Random.Range(-0.1f, 1.1f); // カメラ枠の外（上下）
+
+    //    // 確実に枠外にするための調整
+    //    if (x > 0f && x < 1f) x = x > 0.5f ? 1.1f : -0.1f;
+    //    if (y > 0f && y < 1f) y = y > 0.5f ? 1.1f : -0.1f;
+
+    //    Vector3 spawnPosition = cam.ViewportToWorldPoint(new Vector3(x, y, cam.nearClipPlane));
+    //    spawnPosition.z = 0; // Z位置を0に設定
+
+    //    // ランダムな位置でWordPrefabを生成
+    //    GameObject newWord = Instantiate(wordPrefab, spawnPosition, Quaternion.identity);
+    //    spawnedWords.Add(newWord); // リストに追加
+
+    //    // WordControllerを使って文字を設定
+    //    newWord.GetComponent<WordController>().Initialize(GetRandomCharacter());
+
+    //    // プレイヤーに向かう動きを設定
+    //    newWord.GetComponent<WordController>().SetTarget(Vector3.zero, wordSpeed);
+    //}
 
     char GetRandomCharacter()
     {
