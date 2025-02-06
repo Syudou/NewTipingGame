@@ -97,7 +97,10 @@ public class GameManagerTutorial : MonoBehaviour
         targetLetterText.text = currentLetter.ToString();
 
         virtualKeyboard.ResetKeyColors();
-        //virtualKeyboard.HighlightKey(currentLetter); カラー変更したのでえらーここは明日
+
+        Color fingerColor = fingerIndicator.GetFingerColor(currentLetter);
+        virtualKeyboard.HighlightKeyWithColor(currentLetter, fingerColor);
+
         fingerIndicator.UpdateFingerDisplay(currentLetter);
     }
 
@@ -112,9 +115,14 @@ public class GameManagerTutorial : MonoBehaviour
                     score++;  // スコア加算
                     scoreText.text = "Score: " + score;  // スコア表示更新
 
+                    audioManager.PlayCorrectSE();
                     virtualKeyboard.ResetKeyColors();
                     GenerateRandomLetter();
                     break;
+                }
+                else
+                {
+                    audioManager.PlayWrongSE(); //不正解SEを鳴らす
                 }
             }
         }

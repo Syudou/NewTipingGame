@@ -77,4 +77,14 @@ public class FingerIndicatorTutorial : MonoBehaviour
             finger.color = defaultColor;
         }
     }
+
+    public Color GetFingerColor(char key)
+    {
+        if (fingerMapping.ContainsKey(key))
+        {
+            SpriteRenderer finger = fingerMapping[key];
+            return fingerColors[finger]; //  指の色を返す
+        }
+        return Color.white; //どの指にも該当しない場合はデフォルト色
+    }
 }
