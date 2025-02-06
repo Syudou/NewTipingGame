@@ -10,13 +10,7 @@ public class ProjectileController : MonoBehaviour
     private WordController targetWord; // ターゲットの文字
     public float speed = 10f; // 弾の移動速度
 
-    //public AudioClip hitSound; // 弾が文字に当たったときの効果音
-    //private AudioSource audioSource;
-
-    //void Awake()
-    //{
-    //    audioSource = GetComponent<AudioSource>();
-    //}
+    
     public void Initialize(WordController target)
     {
         targetWord = target; // ターゲットを設定
@@ -51,7 +45,21 @@ public class ProjectileController : MonoBehaviour
 
     }
 
+    //public void ShootBullet(char inputChar)
+    //{
+    //    WordManager wordManager = FindObjectOfType<WordManager>();
+    //    if (wordManager == null) return;
 
+    //    // 最も近いターゲットを取得
+    //    GameObject targetWordObject = wordManager.GetClosestWord(inputChar.ToString());
+    //    if (targetWordObject == null) return;
+
+    //    WordController targetWord = targetWordObject.GetComponent<WordController>();
+    //    if (targetWord == null) return;
+
+    //    // ターゲットをセットして弾を発射
+    //    Initialize(targetWord);
+    //}
 
 
 

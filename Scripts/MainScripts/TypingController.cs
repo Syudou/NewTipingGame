@@ -58,10 +58,44 @@ public class TypingController : MonoBehaviour
         }
     }
 
+    //void Shoot(WordController targetWord)
+    //{
+    //    // 弾を生成
+    //    GameObject projectile = Instantiate(projectilePrefab, shootPoint.position, Quaternion.identity);
+    //    projectile.GetComponent<ProjectileController>().Initialize(targetWord);
+    //}
+
     void Shoot(WordController targetWord)
     {
-        // 弾を生成
-        GameObject projectile = Instantiate(projectilePrefab, shootPoint.position, Quaternion.identity);
-        projectile.GetComponent<ProjectileController>().Initialize(targetWord);
+        // すべての WordController を取得
+        WordController[] words = FindObjectsOfType<WordController>();
+
+        // 入力した文字と一致するワードのうち、プレイヤーに最も近いものを探す
+        WordController closestWord = null;
+        float minDistance = float.MaxValue;
+        Vector3 shootPosition = shootPoint.position; // 弾の発射位置
+
+        foreach (var word in words)
+        {
+            if (word.character == targetWord.character) // 同じ文字か確認
+            {
+                float distance = Vector3.Distance(word.transform.position, shootPosition);
+
+                // より手前（プレイヤーに近い）にある単語を選ぶ
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    closestWord = word;
+                }
+            }
+        }
+
+        // 一番近いターゲットに弾を発射
+        if (closestWord != null)
+        {
+            GameObject projectile = Instantiate(projectilePrefab, shootPoint.position, Quaternion.identity);
+            projectile.GetComponent<ProjectileController>().Initialize(closestWord);
+        }
     }
+
 }

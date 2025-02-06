@@ -84,6 +84,36 @@ public class WordManager : MonoBehaviour
         }
     }
 
+    // 指定された文字の中で最もプレイヤーに近いものを取得する
+    public GameObject GetClosestWord(string targetCharacter)
+    {
+        GameObject closestWord = null;
+        float minDistance = float.MaxValue;
+
+        foreach (GameObject word in spawnedWords)
+        {
+            if (word != null)
+            {
+                WordController wordController = word.GetComponent<WordController>();
+
+                // 指定の文字と一致するか確認
+                if (wordController.character == targetCharacter)
+                {
+                    // プレイヤー(原点)からの距離を計算
+                    float distance = Vector3.Distance(word.transform.position, Vector3.zero);
+
+                    // 一番近いものを選択
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                        closestWord = word;
+                    }
+                }
+            }
+        }
+        return closestWord;
+    }
+
     // すべての文字を消去
     public void ClearAllWords()
     {
