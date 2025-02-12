@@ -18,6 +18,7 @@ public class GameManager_2 : MonoBehaviour
     public TextMeshProUGUI gameOverText; // ゲームオーバー表示用
     public TextMeshProUGUI readyText; // 準備完了のテキスト
     public TextMeshProUGUI TypedText;
+    public TextMeshProUGUI highScoreText; //ハイスコア表示用
 
     public GameObject retryButton; // リトライボタン
     public GameObject titleButton; // タイトルボタン
@@ -28,6 +29,8 @@ public class GameManager_2 : MonoBehaviour
 
     public bool isGameOver = false; // ゲームオーバー状態の管理
     private bool isGameStarted = false; // ゲーム開始状態の管理
+
+    private string highScoreKey = "HighScore_Main2"; //Main2専用のハイスコアキー
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +51,13 @@ public class GameManager_2 : MonoBehaviour
         titleButton.SetActive(false);
         readyText.gameObject.SetActive(true); // 準備完了テキスト表示
         TypedText.gameObject.SetActive(true);
+
+        // ハイスコアを取得して表示
+        int highScore = PlayerPrefs.GetInt(highScoreKey, 0);
+        if (highScoreText != null)
+        {
+            highScoreText.text = "HighScore: " + highScore;
+        }
     }
 
     // Update is called once per frame
@@ -155,6 +165,14 @@ public class GameManager_2 : MonoBehaviour
         isGameOver = true;
         Debug.Log("Game Over!");
 
+        //ハイスコア更新処理
+        int highScore = PlayerPrefs.GetInt(highScoreKey, 0);
+        if (score > highScore)
+        {
+            PlayerPrefs.SetInt(highScoreKey, score);
+            PlayerPrefs.Save();
+        }
+
         // WordManagerのスポーンを停止し、文字を全て消去
         WordManager_2 wordManager = FindObjectOfType<WordManager_2>();
         if (wordManager != null)
@@ -178,6 +196,9 @@ public class GameManager_2 : MonoBehaviour
         audioManager.PlayGameOverSE();
 
         TypedText.gameObject.SetActive(false); //タイピングは消す
+
+        UpdateScoreText(); // スコア更新
+        UpdateHighScoreText(); //ハイスコア表示を更新
     }
 
     public bool IsGameStarted()
@@ -211,9 +232,7 @@ public class GameManager_2 : MonoBehaviour
 
         Debug.Log($"Word '{hitWord.textDisplay.text}' was hit!");
 
-        // スコアを加算
-        //score += 10;
-        //UpdateScoreText();
+        
 
         // 効果音を再生
         if (audioSource != null && hitSound != null)
@@ -224,6 +243,16 @@ public class GameManager_2 : MonoBehaviour
         else
         {
             Debug.LogError("AudioSource または hitSound が null です。");
+        }
+    }
+
+    //ハイスコアテキストを更新
+    private void UpdateHighScoreText()
+    {
+        if (highScoreText != null)
+        {
+            int highScore = PlayerPrefs.GetInt(highScoreKey, 0);
+            highScoreText.text = "HighScore: " + highScore;
         }
     }
 }

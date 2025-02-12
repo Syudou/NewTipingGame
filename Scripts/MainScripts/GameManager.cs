@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI scoreText; // スコア表示用の Text (UI)
     public TextMeshProUGUI gameOverText; // ゲームオーバー表示用
     public TextMeshProUGUI readyText; // 準備完了のテキスト
+    public TextMeshProUGUI highScoreText;
 
     public GameObject retryButton; // リトライボタン
     public GameObject titleButton; // タイトルボタン
@@ -25,6 +26,8 @@ public class GameManager : MonoBehaviour
 
     public bool isGameOver = false; // ゲームオーバー状態の管理
     private bool isGameStarted = false; // ゲーム開始状態の管理
+
+    private string highScoreKey; //ゲームごとのハイスコアキー
 
     // Start is called before the first frame update
     void Start()
@@ -42,6 +45,15 @@ public class GameManager : MonoBehaviour
         retryButton.SetActive(false);
         titleButton.SetActive(false);
         readyText.gameObject.SetActive(true); // 準備完了テキスト表示
+
+        //ゲームごとのハイスコアキーを作成
+        highScoreKey = "HighScore_Main" + SceneManager.GetActiveScene().name;
+        //ハイスコア追加
+        int highScore = PlayerPrefs.GetInt(highScoreKey, 0);
+        if (highScoreText != null)
+        {
+            highScoreText.text = "HighScore: " + highScore;
+        }
     }
 
     // Update is called once per frame
@@ -137,11 +149,28 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void UpdateHighScoreText()
+    {
+        if (highScoreText != null)
+        {
+            int highScore = PlayerPrefs.GetInt(highScoreKey, 0);
+            highScoreText.text = "HighScore: " + highScore;
+        }
+    }
+
     // ゲームオーバー時の処理
     private void GameOver()
     {
         isGameOver = true;
         Debug.Log("Game Over!");
+
+        // ハイスコアの更新処理
+        int highScore = PlayerPrefs.GetInt(highScoreKey, 0);
+        if (score > highScore)
+        {
+            PlayerPrefs.SetInt(highScoreKey, score);
+            PlayerPrefs.Save(); // PlayerPrefs の保存
+        }
 
         // WordManagerのスポーンを停止し、文字を全て消去
         WordManager wordManager = FindObjectOfType<WordManager>();
@@ -164,6 +193,10 @@ public class GameManager : MonoBehaviour
 
         // ゲームオーバー時にSEを再生
         audioManager.PlayGameOverSE();
+
+        // スコア更新
+        UpdateScoreText();
+        UpdateHighScoreText(); // ハイスコア表示を更新
     }
 
     public bool IsGameStarted()
@@ -183,4 +216,6 @@ public class GameManager : MonoBehaviour
         // タイトルシーンをロードする（"TitleScene"がシーン名の場合）
         SceneManager.LoadScene("TitleScene");
     }
+
+
 }
